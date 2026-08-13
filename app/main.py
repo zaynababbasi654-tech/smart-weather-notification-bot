@@ -1,9 +1,11 @@
+import time
+import schedule
+
 from src.data.weather_api import get_weather
 from src.alerts.alert_detector import check_alert
 from src.notifications.discord_notifier import send_discord_notification
 
 
-# Cities monitored by the Smart Weather Bot
 CITIES = [
     "Islamabad",
     "Rawalpindi",
@@ -29,17 +31,16 @@ CITIES = [
     "Abu Dhabi",
     "Doha",
     "London",
-    "New York"
+    "New York",
 ]
 
 
-def run_bot():
-    print("=" * 50)
-    print("       🌤️ SMART WEATHER BOT")
+def check_all_cities():
+    print("\n" + "=" * 50)
+    print("🌤️ SMART WEATHER BOT")
     print("=" * 50)
 
     for city in CITIES:
-
         try:
             print(f"\n📍 Checking weather for {city}...")
 
@@ -73,10 +74,23 @@ def run_bot():
             print(f"❌ Could not get weather for {city}")
             print(f"Error: {e}")
 
-    print("\n" + "=" * 50)
-    print("✅ Weather check completed for all cities.")
-    print("=" * 50)
+    print("\n✅ Weather check completed.")
+
+
+def run_scheduler():
+    # Run immediately when the bot starts
+    check_all_cities()
+
+    # Check all cities every 30 minutes
+    schedule.every(30).minutes.do(check_all_cities)
+
+    print("\n⏰ Scheduler started.")
+    print("🔄 Weather will be checked every 30 minutes.")
+
+    while True:
+        schedule.run_pending()
+        time.sleep(1)
 
 
 if __name__ == "__main__":
-    run_bot()
+    run_scheduler()
