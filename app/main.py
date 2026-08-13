@@ -1,6 +1,3 @@
-import time
-import schedule
-
 from src.data.weather_api import get_weather
 from src.alerts.alert_detector import check_alert
 from src.notifications.discord_notifier import send_discord_notification
@@ -78,18 +75,7 @@ def check_all_cities():
 
 
 def run_scheduler():
-    # Run immediately when the bot starts
     check_all_cities()
-
-    # Check all cities every 30 minutes
-    schedule.every(30).minutes.do(check_all_cities)
-
-    print("\n⏰ Scheduler started.")
-    print("🔄 Weather will be checked every 30 minutes.")
-
-    while True:
-        schedule.run_pending()
-        time.sleep(1)
 
 
 if __name__ == "__main__":
